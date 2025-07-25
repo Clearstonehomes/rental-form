@@ -55,7 +55,6 @@ export default function DealForm({ onCalculate }: Props) {
               className={inputStyle}
               autoComplete="address"
               id="propertyAddress"
-              value={"FSDA"}
             />
           </div>
 
@@ -72,7 +71,6 @@ export default function DealForm({ onCalculate }: Props) {
               className={inputStyle}
               id="monthlyRental"
               onKeyDown={preventInvalidKeys}
-              value={2500}
             />
           </div>
 
@@ -85,7 +83,6 @@ export default function DealForm({ onCalculate }: Props) {
               type="date"
               className={inputStyle}
               id="managementStartDate"
-              value={"2025-07-02"}
             />
           </div>
 
@@ -98,7 +95,6 @@ export default function DealForm({ onCalculate }: Props) {
               type="date"
               className={inputStyle}
               id="rentStartDate"
-              value={"2025-07-16"}
             />
           </div>
 
@@ -111,7 +107,6 @@ export default function DealForm({ onCalculate }: Props) {
               type="date"
               className={inputStyle}
               id="reserveDate"
-              value={"2025-07-05"}
             />
           </div>
 
@@ -125,7 +120,6 @@ export default function DealForm({ onCalculate }: Props) {
               className={inputStyle}
               id="referralAmount"
               onKeyDown={preventInvalidKeys}
-              value={300}
             />
           </div>
 
@@ -170,7 +164,6 @@ export default function DealForm({ onCalculate }: Props) {
                   className={inputStyle}
                   id="localHousingAllowance"
                   onKeyDown={preventInvalidKeys}
-                  value={497}
                 />
               </div>
 
@@ -184,7 +177,6 @@ export default function DealForm({ onCalculate }: Props) {
                   className={inputStyle}
                   id="incentiveAmount"
                   onKeyDown={preventInvalidKeys}
-                  value={13000}
                 />
               </div>
             </>
@@ -201,7 +193,6 @@ export default function DealForm({ onCalculate }: Props) {
                 className={inputStyle}
                 onKeyDown={preventInvalidKeys}
                 id="nightlyLetRate"
-                value={85}
               />
             </div>
           )}
@@ -221,7 +212,6 @@ export default function DealForm({ onCalculate }: Props) {
                   className={inputStyle}
                   id="marketMonthlyRental"
                   onKeyDown={preventInvalidKeys}
-                  value={2800}
                 />
               </div>
 
@@ -235,7 +225,6 @@ export default function DealForm({ onCalculate }: Props) {
                   className={inputStyle}
                   onKeyDown={preventInvalidKeys}
                   id="managementFee"
-                  value={12}
                 />
               </div>
             </>
