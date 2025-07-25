@@ -17,15 +17,23 @@ export default function ResultsDisplay({ values, results }: Props) {
       </h2>
       <div className=" mt-6">
         {values?.model.includes("PRS") && (
-          <DealModelResult model="PRS" result={results} />
+          <DealModelResult model="PRS" result={results} values={values} />
         )}
 
         {values?.model.includes("Nightly Let") && (
-          <DealModelResult model="Nightly Let" result={results} />
+          <DealModelResult
+            model="Nightly Let"
+            result={results}
+            values={values}
+          />
         )}
 
-        {values?.model.includes("Private Guaranteed") && (
-          <DealModelResult model="Private Guaranteed" result={results} />
+        {values?.model.includes("Standard Management") && (
+          <DealModelResult
+            model="Standard Management"
+            result={results}
+            values={values}
+          />
         )}
       </div>
     </div>

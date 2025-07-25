@@ -21,7 +21,7 @@ function App() {
     const results: DealResult = {
       PRS: calculatePRS(values, settings),
       "Nightly Let": calculateNightlyLet(values, settings),
-      "Private Guaranteed": calculatePrivateGuaranteed(values),
+      "Standard Management": calculatePrivateGuaranteed(values),
     };
 
     setResults(results);

@@ -13,7 +13,7 @@ export interface DealFormValues {
   managementFee?: number;
 }
 
-export type DealModelType = "PRS" | "Nightly Let" | "Private Guaranteed";
+export type DealModelType = "PRS" | "Nightly Let" | "Standard Management";
 
 export interface DealResult {
   PRS: {
@@ -28,7 +28,7 @@ export interface DealResult {
     suggestedPaymentToLandlord?: number;
     amountToBorrow?: number;
   };
-  "Private Guaranteed": {
+  "Standard Management": {
     profit?: number;
   };
 }

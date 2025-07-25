@@ -1,22 +1,23 @@
 import { useState } from "react";
-import type { DealResult } from "../types/dealTypes";
+import type { DealFormValues, DealResult } from "../types/dealTypes";
 import BorrowingTableModal from "./BorrowingTable";
 
 interface Props {
   model: keyof DealResult;
   result?: DealResult;
+  values: DealFormValues;
 }
 
-export default function DealModelResult({ model, result }: Props) {
+export default function DealModelResult({ model, result, values }: Props) {
   const isNightlyLet = model === "Nightly Let";
   const modelResult = result?.[model];
   const [isOpen, setIsOpen] = useState(false);
 
-  // Type guard for Private Guaranteed
+  // Type guard for Standard Management
   const isPrivateGuaranteed = (
     data: any
-  ): data is DealResult["Private Guaranteed"] => {
-    return model === "Private Guaranteed";
+  ): data is DealResult["Standard Management"] => {
+    return model === "Standard Management";
   };
 
   const formatCurrency = (value?: number) => {
@@ -62,7 +63,11 @@ export default function DealModelResult({ model, result }: Props) {
           </p>
         </>
       )}
-      <BorrowingTableModal isOpen={isOpen} onClose={setIsOpen} />
+      <BorrowingTableModal
+        isOpen={isOpen}
+        onClose={setIsOpen}
+        values={values}
+      />
     </div>
   );
 }

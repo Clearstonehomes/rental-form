@@ -1,9 +1,30 @@
+import type { DealFormValues } from "../types/dealTypes";
+import {
+  calculateMonthlyFromNightlyRate,
+  calculateNightlyLetShortfall,
+  calculateNightlyLetSurplus,
+  calculateProRatedMonthlyRentToLandlord,
+  calculateProratedRentWithTopUp,
+  calculateReserveToEndOfMonthIncome,
+} from "../utils/utils";
+
 interface BorrowingTableModalProps {
   isOpen: boolean;
   onClose: (e: boolean) => void;
+  values: DealFormValues;
 }
 
-const BorrowingTableModal = ({ isOpen, onClose }: BorrowingTableModalProps) => {
+const BorrowingTableModal = ({
+  isOpen,
+  onClose,
+  values,
+}: BorrowingTableModalProps) => {
+  const {
+    monthlyRental = 0,
+    rentStartDate,
+    reserveDate,
+    nightlyLetRate = 0,
+  } = values;
   return (
     <>
       {isOpen && (
@@ -43,8 +64,11 @@ const BorrowingTableModal = ({ isOpen, onClose }: BorrowingTableModalProps) => {
                   <tr className="border-b border-gray-200">
                     <td className="px-4 py-2">Management date</td>
                     <td className="px-4 py-2">
-                      (# of days from rent start date to end of
-                      month)/(365/12)*monthly rental to landlord
+                      £
+                      {calculateProRatedMonthlyRentToLandlord(
+                        rentStartDate,
+                        monthlyRental
+                      ).toFixed(2)}
                     </td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2"></td>
@@ -53,16 +77,20 @@ const BorrowingTableModal = ({ isOpen, onClose }: BorrowingTableModalProps) => {
                   <tr className="border-b border-gray-200">
                     <td className="px-4 py-2">24th Month</td>
                     <td className="px-4 py-2"></td>
+                    <td className="px-4 py-2"></td>
                     <td className="px-4 py-2">
-                      (# of days from rent start date to end of
-                      month)/(365/12)*monthly rental to landlord
+                      £
+                      {calculateProratedRentWithTopUp(
+                        rentStartDate,
+                        monthlyRental,
+                        300
+                      ).toFixed(2)}
                     </td>
-                    <td className="px-4 py-2">+£300</td>
                     <td className="px-4 py-2"></td>
                   </tr>
                   <tr className="border-b border-gray-200">
                     <td className="px-4 py-2">1st of next month</td>
-                    <td className="px-4 py-2">Monthly rental payment</td>
+                    <td className="px-4 py-2">£{monthlyRental}</td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2"></td>
@@ -71,8 +99,11 @@ const BorrowingTableModal = ({ isOpen, onClose }: BorrowingTableModalProps) => {
                     <td className="px-4 py-2">3rd of next month</td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2">
-                      (# of days from reserve date to end of month)* nightly let
-                      rate
+                      £
+                      {calculateReserveToEndOfMonthIncome(
+                        reserveDate,
+                        nightlyLetRate
+                      ).toFixed(2)}
                     </td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2"></td>
@@ -82,14 +113,19 @@ const BorrowingTableModal = ({ isOpen, onClose }: BorrowingTableModalProps) => {
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2">
-                      Max(0, 300 - ( (# of days from reserve date to end of
-                      month)* nightly let rate - Monthly rental payment))
+                      £
+                      {calculateNightlyLetShortfall(
+                        reserveDate,
+                        nightlyLetRate,
+                        monthlyRental,
+                        300
+                      ).toFixed(2)}
                     </td>
                     <td className="px-4 py-2">£300</td>
                   </tr>
                   <tr className="border-b border-gray-200">
                     <td className="px-4 py-2">1st of second month</td>
-                    <td className="px-4 py-2">Monthly rental payment</td>
+                    <td className="px-4 py-2">£{monthlyRental}</td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2"></td>
@@ -98,7 +134,11 @@ const BorrowingTableModal = ({ isOpen, onClose }: BorrowingTableModalProps) => {
                     <td className="px-4 py-2">3rd of month</td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2">
-                      Number of days in the month *nightly let rate
+                      £
+                      {calculateMonthlyFromNightlyRate(
+                        nightlyLetRate,
+                        rentStartDate
+                      ).toFixed(2)}
                     </td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2"></td>
@@ -107,11 +147,16 @@ const BorrowingTableModal = ({ isOpen, onClose }: BorrowingTableModalProps) => {
                     <td className="px-4 py-2">24th of the month</td>
                     <td className="px-4 py-2"></td>
                     <td className="px-4 py-2"></td>
-                    <td className="px-4 py-2">
-                      (Nightly rate*number of days in the month) - monthly
-                      rental payment
-                    </td>
                     <td className="px-4 py-2"></td>
+                    <td className="px-4 py-2">
+                      {" "}
+                      £
+                      {calculateNightlyLetSurplus(
+                        nightlyLetRate,
+                        rentStartDate,
+                        monthlyRental
+                      ).toFixed(2)}
+                    </td>
                   </tr>
                 </tbody>
               </table>

@@ -76,6 +76,7 @@ export function calculateNightlyLet(
 
   // First borrowing component
   const firstComponent = (daysToMonthEnd / (365 / 12)) * monthlyRental + 300;
+  console.log("First Component:", firstComponent);
 
   // Calculate days from reserve date to end of month
   const reserve = new Date(reserveDate);
@@ -87,6 +88,8 @@ export function calculateNightlyLet(
     0,
     300 - (daysReserveToMonthEnd * nightlyLetRate - monthlyRental)
   );
+
+  console.log("Second Component:", secondComponent);
 
   // Total amount to borrow
   const amountToBorrow = firstComponent + secondComponent;
@@ -116,6 +119,101 @@ export function calculateNightlyLet(
   };
 }
 
+export function calculateReserveToEndOfMonthIncome(
+  reserveDate: string | Date,
+  nightlyLetRate: number
+): number {
+  const reserve = new Date(reserveDate);
+  const endOfMonth = new Date(reserve.getFullYear(), reserve.getMonth() + 1, 0);
+  const daysToMonthEnd =
+    (endOfMonth.getTime() - reserve.getTime()) / (1000 * 3600 * 24);
+
+  const totalIncome = daysToMonthEnd * nightlyLetRate;
+
+  return totalIncome;
+}
+
+export function calculateMonthlyFromNightlyRate(
+  nightlyRate: number,
+  rentStartDate: string
+): number {
+  const dateInMonth = new Date(rentStartDate);
+  const daysInMonth = new Date(
+    dateInMonth.getFullYear(),
+    dateInMonth.getMonth() + 1,
+    0
+  ).getDate();
+  return nightlyRate * daysInMonth;
+}
+
+export function calculateNightlyLetShortfall(
+  reserveDateString: string,
+  nightlyRate: number,
+  monthlyRental: number,
+  targetAmount: number = 300
+): number {
+  const reserveDate = new Date(reserveDateString);
+  const year = reserveDate.getFullYear();
+  const month = reserveDate.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const reserveDay = reserveDate.getDate();
+  const daysRemaining = daysInMonth - reserveDay + 1;
+
+  const nightlyLetValue = daysRemaining * nightlyRate;
+  const net = nightlyLetValue - monthlyRental;
+
+  return Math.max(0, targetAmount - net);
+}
+
+export function calculateNightlyLetSurplus(
+  nightlyRate: number,
+  rentStartDate: string,
+  monthlyRental: number
+): number {
+  const dateInMonth = new Date(rentStartDate);
+  const daysInMonth = new Date(
+    dateInMonth.getFullYear(),
+    dateInMonth.getMonth() + 1,
+    0
+  ).getDate();
+  const totalNightlyLet = nightlyRate * daysInMonth;
+  return totalNightlyLet - monthlyRental;
+}
+
+export function calculateProRatedMonthlyRentToLandlord(
+  rentStartDate: string | Date,
+  monthlyRental: number
+): number {
+  const rentStart = new Date(rentStartDate);
+  const endOfMonth = new Date(
+    rentStart.getFullYear(),
+    rentStart.getMonth() + 1,
+    0
+  );
+  const daysToMonthEnd =
+    (endOfMonth.getTime() - rentStart.getTime()) / (1000 * 3600 * 24);
+
+  const proratedRent = (daysToMonthEnd / (365 / 12)) * monthlyRental;
+
+  return proratedRent;
+}
+
+export function calculateProratedRentWithTopUp(
+  rentStartDateString: string,
+  monthlyRental: number,
+  topUp: number = 300
+): number {
+  const rentStartDate = new Date(rentStartDateString);
+  const year = rentStartDate.getFullYear();
+  const month = rentStartDate.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const rentStartDay = rentStartDate.getDate();
+  const daysRemaining = daysInMonth - rentStartDay + 1;
+
+  const proratedRent = (daysRemaining / (365 / 12)) * monthlyRental;
+  return proratedRent + topUp;
+}
+
 function calculatePrivateGuaranteedProfit(values: DealFormValues): number {
   const { marketMonthlyRental = 0, managementFee = 0 } = values;
   return marketMonthlyRental * (managementFee / 100);
@@ -123,7 +221,7 @@ function calculatePrivateGuaranteedProfit(values: DealFormValues): number {
 
 export function calculatePrivateGuaranteed(
   values: DealFormValues
-): DealResult["Private Guaranteed"] {
+): DealResult["Standard Management"] {
   const profit = calculatePrivateGuaranteedProfit(values);
 
   return {
